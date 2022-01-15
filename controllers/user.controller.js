@@ -1,9 +1,9 @@
-const { response } = require('express')
+const { response, request } = require('express')
 const Usuario = require("../models/user")
 const bcryptjs = require('bcryptjs');
 
 
-const usuariosGet = async (req= request, res = response) => {
+const usuariosGet = async (req = request, res = response) => {
 
     const { limite = 5, desde = 0 } = req.query
     const query = { status:true}
@@ -12,7 +12,7 @@ const usuariosGet = async (req= request, res = response) => {
     //     .skip(Number(desde))
 
     // const total = await Usuario.countDocuments(query)
-
+    // con promesa es mejor en vez de manejar multiples await
     const [total, usuarios] = await Promise.all([
         Usuario.countDocuments(query),
         Usuario.find(query)
@@ -38,9 +38,7 @@ const usuariosPost = async (req, res = response) => {
     await usuario.save()
     // Respuesta servidor
     res.json({
-        msg:"POST API - Controlador",
-        nombre,
-        edad
+        usuario
     });
 };
 
@@ -68,11 +66,14 @@ const usuariosPatch = (req, res = response) => {
 const usuariosDelete = async (req, res = response) => {
 
     const { id } = req.params;
+
+    //const uid = req.uid
     // Borrado fisico
     // const usuario = await Usuario.findByIdAndDelete(id)
     
     // Borrado logico
     const usuario = await Usuario.findByIdAndUpdate(id,{status:false});
+    //const usuarioAutenticado = req.user
 
     res.json(usuario);
 };
