@@ -39,7 +39,7 @@
            // Google token: ID_TOKEN
             const body = {id_token: response.credential}
            //console.log('id_token',response.credential)
-           fetch('http://localhost:8020/api/auth/google',{
+           fetch('https://restserver-cursonode-ricardo.herokuapp.com/api/auth/google',{
                method:"POST",
                headers: {
                    'Content-Type':'application/json'
