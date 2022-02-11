@@ -26,7 +26,6 @@ const validateJWT = async (req = request, res = response, next) => {
 
         // consultar si usuario fue borrado
         if(!user.status) {
-            console.log("ENTRE ACA EN EL USUARIO INACTIVO")
             return res.status(401).json({
                 msg:"Token no valido - Usuario con estado inactivo"
             })
