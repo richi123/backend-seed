@@ -1,24 +1,29 @@
 const express = require('express')
 var cors = require('cors')
+const fileUpload = require('express-fileupload')
 const { dbConnection } = require('../database/config')
 
 class Server {
-
+    // Inicializar constructor
     constructor() {
+        // Inicializar Servidor
         this.app = express();
+        // Inicializar puerto de servidor
         this.port = process.env.PORT
+        // Establecer paths de Rutas
         this.paths = {
             auth: '/api/auth',
             user: '/api/usuarios',
             categories: '/api/categorias',
             products: '/api/productos',
-            search: '/api/buscar'
+            search: '/api/buscar',
+            uploads: '/api/uploads'
         }
-        //Conectar a la base de datos
+        //Ejecutar la conexion a la base de datos
         this.connectDb();
-        //Middlewares
+        //Inicializar los Middlewares
         this.middlewares();
-        //rutas para aplicacion
+        //Inicializar las rutas para aplicacion
         this.routes();
     }
 
@@ -33,6 +38,12 @@ class Server {
         this.app.use( express.json() );
         //directorio publico
         this.app.use(express.static('public'));
+        // Fileupload - Carga de archivo
+        this.app.use(fileUpload({
+            useTempFiles : true,
+            tempFileDir : '/tmp/',
+            createParentPath: true
+        }));
 
     }
 
@@ -42,6 +53,7 @@ class Server {
         this.app.use(this.paths.categories, require('../routes/categories.routes'));
         this.app.use(this.paths.products, require('../routes/products.routes'));
         this.app.use(this.paths.search, require('../routes/search.routes'));
+        this.app.use(this.paths.uploads, require('../routes/uploads.routes'));
     }
 
     listen() {

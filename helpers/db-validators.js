@@ -1,5 +1,7 @@
 const Role = require('../models/role')
-const {Usuario, Categorie, Product} = require('../models')
+const {Usuario, Categorie, Product} = require('../models');
+const { collection } = require('../models/role');
+const { Collection } = require('mongoose');
 
 const isValidRole = async (role = '') => {
     // error customizado
@@ -40,11 +42,21 @@ const existProductById = async (id) => {
     }
 };
 
+const allowedCollections = async (collection = '', collections = []) => {
+
+    const included = collections.includes(collection);
+    if(!included) {
+        throw new Error (`La coleccion ${collection} no es permitida ${collections}`)
+    }
+    return true
+}
+
 
 module.exports = {
     isValidRole,
     emailExist,
     userIdExist,
     existCategorieById,
-    existProductById
+    existProductById,
+    allowedCollections
 }
